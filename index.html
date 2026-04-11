@@ -1185,24 +1185,14 @@ The JSON must follow this exact structure:
 Use green for safe/appropriate, amber for mild concerns, red for serious concerns. Be accurate and fair. If you don't recognize the content, make a reasonable assessment based on the name and context.`;
 
   try {
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
+    const response = await fetch('/.netlify/functions/rate-channel', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': ANTHROPIC_KEY,
-        'anthropic-dangerous-direct-browser-access': 'true'
-      },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 1000,
-        system: systemPrompt,
-        messages: [{ role: 'user', content: `Rate this for parents: "${query}"` }]
-      })
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ query })
     });
 
     clearInterval(dotsIv);
-    const data = await response.json();
-    const text = data.content?.[0]?.text || '';
+    const text = await response.text();
     const clean = text.replace(/```json|```/g, '').trim();
     const ch = JSON.parse(clean);
     showCard(ch);
