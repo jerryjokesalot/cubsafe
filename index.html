@@ -532,14 +532,14 @@ footer {
         <div class="search-animated-text" id="searchAnimText">
           <span class="search-placeholder" id="searchPlaceholder" style="display:none;">Search a YouTube channel or video game...</span>
           <span id="searchText"></span><span class="search-cursor" id="searchCursor"></span>
+          <input type="text" id="liveInput"
+            placeholder=""
+            style="position:absolute;left:0;top:0;width:100%;height:100%;opacity:0;border:none;outline:none;background:transparent;padding:0;font-family:'DM Sans',sans-serif;font-size:16px;color:var(--bark);cursor:text;"
+            onkeydown="handleKey(event)"
+            oninput="handleInput(event)"
+            onfocus="onSearchFocus()"
+            onblur="onSearchBlur()" />
         </div>
-        <input type="text" id="liveInput"
-          placeholder=""
-          style="position:absolute;left:65px;top:50%;transform:translateY(-50%);width:calc(100% - 115px);opacity:0;border:none;outline:none;background:transparent;padding:0;font-family:'DM Sans',sans-serif;font-size:16px;color:var(--bark);cursor:text;"
-          onkeydown="handleKey(event)"
-          oninput="handleInput(event)"
-          onfocus="onSearchFocus()"
-          onblur="onSearchBlur()" />
         <button class="search-btn" onclick="triggerSearch()" aria-label="Search">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
         </button>
