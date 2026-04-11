@@ -535,7 +535,7 @@ footer {
         </div>
         <input type="text" id="liveInput"
           placeholder=""
-          style="display:none;flex:1;border:none;outline:none;background:transparent;padding:0;font-family:'DM Sans',sans-serif;font-size:16px;color:var(--bark);cursor:text;" placeholder="Search a channel or game..."
+          style="flex:1;border:none;outline:none;background:transparent;padding:0;font-family:'DM Sans',sans-serif;font-size:16px;color:var(--bark);cursor:text;opacity:0;pointer-events:none;position:absolute;left:0;width:100%;" placeholder="Search a channel or game..."
           onkeydown="handleKey(event)"
           oninput="handleInput(event)"
           onfocus="onSearchFocus()"
@@ -1020,14 +1020,13 @@ setInterval(() => { if (!isAnimating && !isLiveMode) runCycle(); }, 6000);
 function focusSearch() {
   isLiveMode = true; isAnimating = false;
   const input = document.getElementById('liveInput');
-  document.getElementById('searchAnimText').style.display = 'none';
-  input.style.display = 'block';
+  const animText = document.getElementById('searchAnimText');
+  animText.style.opacity = '0';
+  animText.style.pointerEvents = 'none';
+  input.style.opacity = '1';
+  input.style.pointerEvents = 'auto';
   input.value = liveTyping;
   input.focus();
-  requestAnimationFrame(() => {
-    const len = input.value.length;
-    input.setSelectionRange(len, len);
-  });
 }
 
 function onSearchFocus() {
@@ -1065,9 +1064,12 @@ function triggerSearch() {
 function exitLiveMode() {
   isLiveMode = false; liveTyping = '';
   const input = document.getElementById('liveInput');
-  input.value = ''; input.style.display = 'none';
+  input.value = '';
+  input.style.opacity = '0';
+  input.style.pointerEvents = 'none';
   const animText = document.getElementById('searchAnimText');
-  animText.style.display = 'flex';
+  animText.style.opacity = '1';
+  animText.style.pointerEvents = 'auto';
   document.getElementById('searchText').textContent = '';
   document.getElementById('searchCursor').style.display = 'inline-block';
   setTimeout(runCycle, 800);
