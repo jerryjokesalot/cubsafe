@@ -1023,9 +1023,8 @@ function focusSearch() {
   document.getElementById('searchAnimText').style.display = 'none';
   input.style.display = 'block';
   input.value = liveTyping;
+  input.focus();
   requestAnimationFrame(() => {
-    input.focus();
-    // Place cursor at end of any existing text
     const len = input.value.length;
     input.setSelectionRange(len, len);
   });
