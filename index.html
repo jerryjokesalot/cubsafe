@@ -207,9 +207,9 @@ nav {
   font-family: 'DM Sans', sans-serif;
   font-size: 16px;
   color: var(--bark);
-  min-height: 24px;
   display: flex; align-items: center;
   position: relative;
+  align-self: stretch;
 }
 .search-placeholder {
   color: var(--bark-light);
@@ -534,7 +534,7 @@ footer {
           <span id="searchText"></span><span class="search-cursor" id="searchCursor"></span>
           <input type="text" id="liveInput"
             placeholder=""
-            style="position:absolute;left:0;top:0;width:100%;height:100%;opacity:0;border:none;outline:none;background:transparent;padding:0;font-family:'DM Sans',sans-serif;font-size:16px;color:var(--bark);cursor:text;"
+            style="position:absolute;left:0;top:0;right:0;bottom:0;width:100%;height:100%;opacity:0;border:none;outline:none;background:transparent;padding:0;font-family:'DM Sans',sans-serif;font-size:16px;color:var(--bark);cursor:text;box-sizing:border-box;"
             onkeydown="handleKey(event)"
             oninput="handleInput(event)"
             onfocus="onSearchFocus()"
