@@ -480,12 +480,12 @@ footer {
     background: rgba(245, 237, 224, 0.85);
     backdrop-filter: blur(12px);
   }
-  .logo-nav img { height: 36px; }
+  .logo-nav img { height: 26px; }
   .nav-link { display: none; }
-  .nav-cta { padding: 8px 16px; font-size: 12px; }
+  .nav-cta { padding: 7px 14px; font-size: 12px; }
 
   /* HERO — reduce top padding so search bar is visible on load */
-  .hero { padding: 80px 16px 0; }
+  .hero { padding: 58px 16px 0; }
   .hero-content { padding-bottom: 200px; }
 
   /* HEADLINE — tighter, more readable on small screen */
@@ -985,7 +985,7 @@ function showCard(ch) {
   document.getElementById('searchLoading').style.display = 'none';
   card.classList.remove('visible');
   setTimeout(() => {
-    const isGame = ch.type === 'game' || ch.contentType === 'game';
+    const isGame = ch.contentType === 'game' || ch.type === 'game' || (ch.platform !== undefined) || (ch.genre !== undefined && !ch.type?.includes('/'));
     const av = document.getElementById('cardAvatar');
     av.textContent = ch.avatar; av.style.background = ch.avatarBg; av.style.color = ch.avatarColor;
     document.getElementById('cardName').textContent = ch.name;
