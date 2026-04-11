@@ -908,9 +908,13 @@ function showCard(ch) {
       header.style.justifyContent = 'center';
     } else {
       header.style.flexDirection = 'row';
-      header.style.textAlign = 'center';
+      header.style.textAlign = 'left';
       header.style.justifyContent = 'flex-start';
     }
+
+    // Center the name/type text block for YouTube cards
+    const nameBlock = document.getElementById('cardName').parentElement;
+    nameBlock.style.textAlign = isGame ? 'left' : 'center';
 
     // ESRB badge
     const esrbEl = document.getElementById('cardEsrb');
