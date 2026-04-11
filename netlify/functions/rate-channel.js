@@ -1,55 +1,74 @@
-exports.handler = async function(event) {
-  if (event.httpMethod !== 'POST') {
-    return { statusCode: 405, body: 'Method Not Allowed' };
-  }
+const https = require('https');
 
+exports.handler = async (event) => {
   const { query } = JSON.parse(event.body);
 
-  const response = await fetch('https://api.anthropic.com/v1/messages', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-api-key': process.env.ANTHROPIC_API_KEY,
-      'anthropic-version': '2023-06-01'
-    },
-    body: JSON.stringify({
-      model: 'claude-sonnet-4-20250514',
-      max_tokens: 1000,
-      messages: [{
-        role: 'user',
-        content: `You are CubSafe's content rating engine. A parent has searched for a YouTube channel called "${query}".
+  const systemPrompt = `You are CubSafe, a parental content rating assistant. When given a YouTube channel name or video game title, return a JSON object rating it for parents. Respond ONLY with valid JSON, no markdown, no backticks, no explanation.
 
-Based on your knowledge of this channel, generate a content rating for parents.
-
-Respond ONLY with a valid JSON object, no markdown, no explanation:
+The JSON must follow this exact structure:
 {
-  "name": "exact channel name",
-  "type": "content category",
-  "avatar": "2 letter initials",
-  "avatarBg": "a soft hex color",
-  "avatarColor": "a dark contrasting hex color",
+  "name": "Channel or game name",
+  "contentType": "youtube or game",
+  "type": "short genre/category description (for YouTube)",
+  "platform": "platforms (for games only)",
+  "genre": "game genre (for games only)",
+  "avatar": "2-3 letter abbreviation",
+  "avatarBg": "#hex background color",
+  "avatarColor": "#hex text color",
+  "officialRating": "ESRB rating like E, E10+, T, M (games only, omit for YouTube)",
+  "officialRatingDesc": "ESRB descriptor text (games only)",
   "ratings": [
-    {"label": "Language", "badge": "Clean|Mild|Moderate|Strong", "type": "green|amber|red"},
-    {"label": "Violence", "badge": "None|Mild (cartoon)|Moderate|Strong", "type": "green|amber|red"},
-    {"label": "Themes", "badge": "short description", "type": "green|amber|red"},
-    {"label": "Lifestyle content", "badge": "short description", "type": "green|amber|red"}
+    {"label": "Language", "badge": "one word or short phrase", "type": "green or amber or red"},
+    {"label": "Violence", "badge": "one word or short phrase", "type": "green or amber or red"},
+    {"label": "Themes", "badge": "one word or short phrase", "type": "green or amber or red"},
+    {"label": "Lifestyle content", "badge": "one word or short phrase", "type": "green or amber or red"}
   ],
+  "parentalControls": "description of in-game parental controls (games only, or null)",
   "ageRec": "Recommended age: X+",
-  "overall": "All Ages|Family Friendly|Teen|Mature",
-  "overallType": "green|amber|red",
-  "note": "2 sentence honest parent-focused summary"
-}`
-      }]
-    })
+  "overall": "All Ages or Family Friendly or Teen or Mature",
+  "overallType": "green or amber or red",
+  "note": "2-3 sentence plain-English summary for parents"
+}`;
+
+  const payload = JSON.stringify({
+    model: 'claude-sonnet-4-20250514',
+    max_tokens: 1000,
+    system: systemPrompt,
+    messages: [{ role: 'user', content: `Rate this for parents: "${query}"` }]
   });
 
-  const data = await response.json();
-  const text = data.content?.find(b => b.type === 'text')?.text || '';
-  const clean = text.replace(/```json|```/g, '').trim();
+  return new Promise((resolve) => {
+    const options = {
+      hostname: 'api.anthropic.com',
+      path: '/v1/messages',
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': process.env.ANTHROPIC_KEY,
+        'anthropic-version': '2023-06-01',
+        'Content-Length': Buffer.byteLength(payload)
+      }
+    };
 
-  return {
-    statusCode: 200,
-    headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
-    body: clean
-  };
+    const req = https.request(options, (res) => {
+      let data = '';
+      res.on('data', (chunk) => { data += chunk; });
+      res.on('end', () => {
+        try {
+          const parsed = JSON.parse(data);
+          const text = parsed.content[0].text;
+          resolve({ statusCode: 200, body: text });
+        } catch (e) {
+          resolve({ statusCode: 500, body: JSON.stringify({ error: 'Parse error', raw: data }) });
+        }
+      });
+    });
+
+    req.on('error', (e) => {
+      resolve({ statusCode: 500, body: JSON.stringify({ error: e.message }) });
+    });
+
+    req.write(payload);
+    req.end();
+  });
 };
