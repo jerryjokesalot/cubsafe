@@ -480,12 +480,13 @@ footer {
     background: rgba(245, 237, 224, 0.85);
     backdrop-filter: blur(12px);
   }
-  .logo-nav img { height: 26px; }
+  .logo-nav img { height: 32px !important; max-height: 32px !important; }
+  .logo-nav { font-size: 0; gap: 0; }
   .nav-link { display: none; }
   .nav-cta { padding: 7px 14px; font-size: 12px; }
 
   /* HERO — on mobile, flow naturally instead of trying to center */
-  .hero { padding: 58px 16px 0; min-height: unset; justify-content: flex-start; }
+  .hero { padding: 50px 16px 0; min-height: unset; justify-content: flex-start; }
   .hero-content { padding-bottom: 60px; }
 
   /* HEADLINE — tighter, more readable on small screen */
