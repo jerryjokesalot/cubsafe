@@ -527,7 +527,7 @@ footer {
 
     <div class="search-wrap">
       <p style="font-size:11px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:var(--dusk-orange);text-align:left;margin-bottom:8px;display:flex;align-items:center;gap:8px;"><span style="display:block;width:24px;height:1px;background:var(--dusk-orange);opacity:0.5;"></span>Search any YouTube channel or video game</p>
-      <div class="search-bar" id="searchBar" onclick="focusSearch()">
+      <div class="search-bar" id="searchBar" onclick="focusSearch()" ontouchstart="swapToInput()">
         <span class="search-icon">🔍</span>
         <div class="search-animated-text" id="searchAnimText">
           <span class="search-placeholder" id="searchPlaceholder" style="display:none;">Search a YouTube channel or video game...</span>
@@ -1017,6 +1017,11 @@ runCycle();
 setInterval(() => { if (!isAnimating && !isLiveMode) runCycle(); }, 6000);
 
 // ---- LIVE SEARCH ----
+function swapToInput() {
+  document.getElementById('searchAnimText').style.display = 'none';
+  document.getElementById('liveInput').style.display = 'block';
+}
+
 function focusSearch() {
   isLiveMode = true; isAnimating = false;
   const input = document.getElementById('liveInput');
