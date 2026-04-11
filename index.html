@@ -1023,7 +1023,7 @@ function focusSearch() {
   document.getElementById('searchAnimText').style.display = 'none';
   input.style.display = 'block';
   input.value = liveTyping;
-  input.focus();
+  requestAnimationFrame(() => input.focus());
 }
 
 function onSearchFocus() {
