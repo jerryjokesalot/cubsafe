@@ -535,7 +535,7 @@ footer {
         </div>
         <input type="text" id="liveInput"
           placeholder=""
-          style="display:none;flex:1;border:none;outline:none;background:transparent;padding:0;font-family:'DM Sans',sans-serif;font-size:16px;color:var(--bark);cursor:text;"
+          style="display:none;flex:1;border:none;outline:none;background:transparent;padding:0;font-family:'DM Sans',sans-serif;font-size:16px;color:var(--bark);cursor:text;" placeholder="Search a channel or game..."
           onkeydown="handleKey(event)"
           oninput="handleInput(event)"
           onfocus="onSearchFocus()"
@@ -1023,7 +1023,12 @@ function focusSearch() {
   document.getElementById('searchAnimText').style.display = 'none';
   input.style.display = 'block';
   input.value = liveTyping;
-  requestAnimationFrame(() => input.focus());
+  requestAnimationFrame(() => {
+    input.focus();
+    // Place cursor at end of any existing text
+    const len = input.value.length;
+    input.setSelectionRange(len, len);
+  });
 }
 
 function onSearchFocus() {
