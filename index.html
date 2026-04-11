@@ -266,7 +266,6 @@ nav {
   max-width: 520px;
   width: 100%;
   opacity: 0; animation: fadeUp 0.7s 0.75s forwards;
-  min-height: 280px;
 }
 
 .rating-card {
@@ -485,9 +484,9 @@ footer {
   .nav-link { display: none; }
   .nav-cta { padding: 7px 14px; font-size: 12px; }
 
-  /* HERO — reduce top padding so search bar is visible on load */
-  .hero { padding: 58px 16px 0; }
-  .hero-content { padding-bottom: 200px; }
+  /* HERO — on mobile, flow naturally instead of trying to center */
+  .hero { padding: 58px 16px 0; min-height: unset; justify-content: flex-start; }
+  .hero-content { padding-bottom: 60px; }
 
   /* HEADLINE — tighter, more readable on small screen */
   .hero-headline { margin-bottom: 10px; }
