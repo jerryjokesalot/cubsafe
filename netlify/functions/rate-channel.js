@@ -8,7 +8,7 @@ exports.handler = async function(event) {
     return { statusCode: 400, body: JSON.stringify({ error: 'Bad request body' }) };
   }
 
-  const key = process.env.ANTHROPIC_KEY;
+  const key = process.env.ANTHROPIC_API_KEY;
 
   const systemPrompt = `You are CubSafe, a parental content rating assistant.
 
